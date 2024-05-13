@@ -38,11 +38,17 @@ function getHumanChoice() {
 }
 
 // creo una funcion llamada playRound que no recibe parametros
-function playRound() {
+function playRound(humanChoice) {
     // creo una variable que guarda la eleccion de la computadora
     let pcEleccion = getComputerChoice();
     // creo una variable que guarda la eleccion humana
-    let humanEleccion = getHumanChoice();
+    let humanChoiceString = '';
+
+    if(humanChoice == '1'){humanChoiceString = 'piedra'};
+    if(humanChoice == '2'){humanChoiceString = 'papel'};
+    if(humanChoice == '3'){humanChoiceString = 'tijeras'};
+
+    let humanEleccion = humanChoiceString;
     // si son iguales retorno empate y devuelvo un numero 0
     if(pcEleccion === humanEleccion){
         console.log("empate");
@@ -81,32 +87,49 @@ function playRound() {
     }
 }
 
-function playGame(){
+
+
+
+
+function playGame() {
     let humanScore = 0;
     let pcScore = 0;
-    let gameOn = true;
-    while(gameOn == true){
-        let whoWins = 0;
-        whoWins = playRound();
-        if(whoWins == 1){
+    let humanChoice = '';
+
+    const buttons = document.querySelectorAll("button");
+
+    buttons.forEach((button) => {
+        button.addEventListener("click", () => {
+            humanChoice = button.id;
+            playRoundAndUpdateScores();
+        });
+    });
+
+    function playRoundAndUpdateScores() {
+        let whoWins = playRound(humanChoice);
+        if (whoWins === 1) {
             humanScore++;
-            console.log("human score: ",humanScore);
-            console.log("pc score: ",pcScore);
-        }
-        if(whoWins == 2){
+        };
+        if (whoWins === 2) {
             pcScore++;
-            console.log("human score: ",humanScore);
-            console.log("pc score: ",pcScore);
-        }
+        };
+
+        const divShow = document.querySelector("#showResult");
+        divShow.textContent = "human score:" + humanScore + " pc score:" + pcScore;
+
         if(humanScore == 5){
-            console.log("human wins")
-            gameOn = false;
+            humanScore = 0;
+            pcScore = 0;
+            divShow.textContent = "Human Won";
         }
+
         if(pcScore == 5){
-            console.log("pc wins")
-            gameOn = false;
+            humanScore = 0;
+            pcScore = 0;
+            divShow.textContent = "Pc Won";
         }
+
     }
 }
 
-playGame();
+playGame()
